@@ -1,0 +1,141 @@
+<!--
+    http://jsonplaceholder.typicode.com/posts
+
+
+-->
+
+
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <div>
+        <table id="posts"></table>
+        <!-- Tableau contenant tout les utilisateurs -->
+    </div>
+    <div id="comment">
+        <!-- Tableau contenant l'utilisateur selectionner -->
+    </div>
+    <script>
+        $(function() { // START Document.ready en JQuery
+
+                /* Request en Ajax pour récupérer les utilisateurs - Retour en Array JSON */
+                $.ajax({
+                    url: "http://jsonplaceholder.typicode.com/posts",
+                    method: "GET",
+                })
+
+
+                .done(function(articles) { // En cas de reussite - on stocke les retours dans la variable articles.
+
+                    var posts = "<tr>"; // Init variable posts
+
+                    /* 1st boucle : Récupère les titres du tableau - En bouclant sur le premier element de notre reponse (articles[0]), il recupère les keys*/
+                    $.each(articles[0], function(index, value) {
+                        posts += "<th>";
+                        posts += index; // Affiche la key -> index de notre object
+                        posts += "</th>";
+
+
+                    });
+
+                    posts += "</tr>";
+
+
+                    /* 2nd boucle : Parcourt chaque ligne du tableau
+
+                                            |id|name|  phone   |
+                        1st iteration-> |1 |Mike|0606060606|
+                        2nd iteration -> |2 |Bob |0101010101|
+
+                        *Une itération désigne l'action de répéter un processus. Le calcul itératif permet l'application à des équations récursives.
+                    */
+                    for (var i = 0; i < articles.length; i++) {
+
+                        posts += "<tr>";
+
+
+                        /* 3rd boucle : Parcourt chaque colonne du tableau
+
+                                Seconde iteration
+                                          |
+                        1st iteration |
+                                 |        |
+                                 v        v
+                            |id|name|  phone   |
+                            |1 |Mike|0606060606|
+
+                            *Une itération désigne l'action de répéter un processus. Le calcul itératif permet l'application à des équations récursives.
+                        */
+                        $.each(articles[i], function(index, value) {
+                            posts += "<td><a href='http://jsonplaceholder.typicode.com/comments?postId="+ (i+1) +"''>";
+                            posts += value;
+                            posts += "</a></td>";
+                           
+                        });
+
+                        posts += "</tr>";
+                    };
+                    $("#posts").html(posts); // Affiche le tableau dans la balise qui a pour id "posts"
+
+
+                    $("a").click(function(e) { // Evenement Jquery - Evenement qui se declanche au click d'un balise "a" - variable e stocke l'evenement
+
+                        // Annulation de l'actualisation de la page
+                        e.preventDefault();
+
+                        article = $(this).attr("href");
+                        console.log(article);
+
+                        var request = $.ajax({
+                            url: article,
+                            method: "GET",
+                        })
+                        request.done(function(commentaires) {
+                            comms = "<table border='2'>";
+                            
+                            comms += "<tr>";
+                            $.each(commentaires[0], function(index, value) {
+                           		comms += "<th>";
+                            	comms += index; // Affiche la key -> index de notre object
+                            	comms += "</th>";
+                            });
+                            comms += "</tr>";
+
+                            for (var i = 0; i < commentaires.length; i++) {
+                                console.log();
+                                //if (commentaires[i].name == article) {
+
+                                comms += "<tr>";
+                                    	
+                                $.each(commentaires[i], function(index, value) {
+			                        comms += "<td>";
+			                        comms += value;
+			                        comms += "</td>";
+			                           
+			                    });
+			                    comms += "</tr>";
+                            }
+                            
+                            comms += "</table>";
+                            $("#comment").html(comms);
+                        })
+
+                    });
+                })
+
+                .fail(function(XPDDR, data) {
+                    alert("Request fail !");
+                })
+
+
+            }) // END Document.ready en JQuery
+    </script>
+
+</body>
+
+
+</html>

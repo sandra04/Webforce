@@ -1,0 +1,43 @@
+<html>
+	<head>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<meta charset="utf8"/>
+	</head>
+
+	<body>
+		<div>
+			<form>
+				<label>Marque :</label>
+				<input type="text" name="marque" id="marque"/><br/><br/>
+
+				<label>Modèle :</label>
+				<input type="text" name="modele" id="modele"/><br/><br/>
+
+				<label>Année :</label>
+				<input type="text" name="annee" id="annee"/><br/><br/>
+
+				<label>Couleur :</label>
+				<input type="color" name="couleur" id="couleur"/><br/><br/>
+
+				<input type="submit" value="Ajouter voiture" id="envoyer" name="envoyer"/>
+			</form>
+		</div>
+
+		<div id="reponse">
+		</div>
+
+
+		<script>
+		$(function(){
+			$("#envoyer").click(function(e){
+				e.preventDefault();
+
+				$.post("insert.php", $("form").serialize()) // serialize() met les clés et valeurs des input sur une ligne
+					.done(function(data){
+						$("#reponse").html(data);
+					})
+			})
+		})
+		</script>
+	</body>
+</html>
